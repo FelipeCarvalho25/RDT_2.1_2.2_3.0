@@ -1,0 +1,1 @@
+#Esta é a camada de aplicação Sender
