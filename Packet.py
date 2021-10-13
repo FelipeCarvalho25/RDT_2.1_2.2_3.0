@@ -23,7 +23,7 @@ class Packet:
         msg_S = byte_S[Packet.length_S_length + Packet.seq_num_S_length + Packet.checksum_length:]
         return self(seq_num, msg_S)
 
-    def calculate_checkSum(self,data):
+    def calculate_checkSum(self, data):
         checkSum = 1
         return checkSum
 
