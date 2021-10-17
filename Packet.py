@@ -15,11 +15,17 @@ class Packet:
         checkSum = 1
         return checkSum
 
-    def isNack(self):
+    def isNak(self):
         return self.msg_S == 'NAK'
 
     def isAck(self):
         return self.msg_S == 'ACK'
+
+    def has_seq(self):
+        return self.seq_num
+
+    def extract(self):
+        return self.msg_S
 
     @staticmethod
     def corrupt(msg, computed_checksum_S):
