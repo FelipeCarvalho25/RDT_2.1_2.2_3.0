@@ -15,6 +15,9 @@ class Packet:
         checkSum = 1
         return checkSum
 
+    def setMsg(self, msg):
+        self.msg_S = msg
+
     def isNak(self):
         return self.msg_S == 'NAK'
 

@@ -22,7 +22,7 @@ def rdt_2_1_send(msg_S,queue, event):
         if state == '0':
             snd_packt = Packet.Packet(0, msg_S, '0')
             # if RDT_2_1.send_ready(msg_S):
-            network.udt_send(snd_packt,queue )
+            network.udt_send(snd_packt,queue, 10 )
             event.wait()
             state = '1'
         elif state == '1':
@@ -31,13 +31,13 @@ def rdt_2_1_send(msg_S,queue, event):
             event.set()
             if not (rcv_packt is None) and (
                     rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) or rcv_packt.isNak()):
-                network.udt_send(snd_packt,queue )
+                network.udt_send(snd_packt,queue, 10  )
                 event.wait()
             elif not (rcv_packt is None) and not rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) and rcv_packt.isAck():
                 state = '2'
         elif state == '2':
             snd_packt = Packet.Packet(1, msg_S, '1')
-            network.udt_send(snd_packt,queue )
+            network.udt_send(snd_packt,queue, 10  )
             event.wait()
             state = '3'
         elif state == '3':
@@ -45,7 +45,7 @@ def rdt_2_1_send(msg_S,queue, event):
             rcv_packt = reveid(queue)
             event.set()
             if not (rcv_packt is None) and (rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) or rcv_packt.isNak()):
-                network.udt_send(snd_packt,queue )
+                network.udt_send(snd_packt,queue, 10  )
                 event.wait()
             elif not (rcv_packt is None) and not rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) and rcv_packt.isAck():
                 state = '1'
@@ -61,17 +61,17 @@ def rdt_2_1_receive(queue, event):
             event.set()
             if not (rcv_packt is None) and rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum):
                 snd_packt = Packet.Packet(rcv_packt.seq_num, NAK, '0')
-                network.udt_send(snd_packt,queue)
+                network.udt_send(snd_packt,queue, 10 )
                 event.wait()
             elif not (rcv_packt is None) and not rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) and rcv_packt.has_seq() == 1:
                 snd_packt = Packet.Packet(rcv_packt.seq_num, ACK, '1')
-                network.udt_send(snd_packt,queue)
+                network.udt_send(snd_packt,queue, 10 )
                 event.wait()
             elif not (rcv_packt is None) and not rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) and rcv_packt.has_seq() == 0:
                 data = rcv_packt.extract()
                 deliver_data(data)
                 snd_packt = Packet.Packet(rcv_packt.seq_num, ACK, '0')
-                network.udt_send(snd_packt, queue)
+                network.udt_send(snd_packt, queue, 10 )
                 event.wait()
                 state = '1'
         elif state == '1':
@@ -79,17 +79,17 @@ def rdt_2_1_receive(queue, event):
             event.set()
             if not (rcv_packt is None) and rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum):
                 snd_packt = Packet.Packet(rcv_packt.seq_num, NAK, '1')
-                network.udt_send(snd_packt, queue)
+                network.udt_send(snd_packt, queue, 10 )
                 event.wait()
             elif not (rcv_packt is None) and not rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) and rcv_packt.has_seq() == 0:
                 snd_packt = Packet.Packet(rcv_packt.seq_num, ACK, '0')
-                network.udt_send(snd_packt, queue)
+                network.udt_send(snd_packt, queue, 10 )
                 event.wait()
             elif not (rcv_packt is None) and not rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) and rcv_packt.has_seq() == 1:
                 data = rcv_packt.extract()
                 deliver_data(data)
                 snd_packt = Packet.Packet(rcv_packt.seq_num, ACK, '1')
-                network.udt_send(snd_packt, queue)
+                network.udt_send(snd_packt, queue, 10 )
                 event.wait()
                 state = '1'
 
