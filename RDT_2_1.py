@@ -188,7 +188,9 @@ def rdt_3_0_send(msg_S, queue, event):
 
         if state == '0':
             snd_packt = Packet.Packet(0, msg_S, '0')
-            
+
+            if not (rcv_packt is None):
+
             # if RDT_2_1.send_ready(msg_S):
             network.udt_send(snd_packt, queue, 10)
             event.wait()
@@ -200,14 +202,14 @@ def rdt_3_0_send(msg_S, queue, event):
             rcv_packt = reveid(queue )
             event.set()
 
-            if not (rcv_packt is None) and (rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) or rcv_packt.isNak()):
+            if not (rcv_packt is None) and (rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) or rcv_packt.isAck()):
 
             elif timeout(timer):
                 network.udt_send(snd_packt, queue, 10)
                 event.wait()
                 start_timer(timer)
 
-            elif not (rcv_packt is None) and not rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) and rcv_packt.isAck():
+            elif not (rcv_packt is None) and not rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) and rcv_packt.isNak():
                 state = '2'
 
         elif state == '2':
@@ -224,18 +226,18 @@ def rdt_3_0_send(msg_S, queue, event):
             state = '3'
 
         elif state == '3':
-            snd_packt = Packet.Packet(0, msg_S, '0')    
+            snd_packt = Packet.Packet(0, msg_S, '1')
             rcv_packt = reveid(queue)
             event.set()
 
-            if not (rcv_packt is None) and (rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) or rcv_packt.isAck()):
+            if not (rcv_packt is None) and (rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) or rcv_packt.isNak()):
 
             elif timeout(timer):
                 network.udt_send(snd_packt, queue, 10)
                 event.wait()
                 start_timer(timer)
 
-            elif not (rcv_packt is None) and not rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) and rcv_packt.isNak():
+            elif not (rcv_packt is None) and not rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) and rcv_packt.isAck():
                 state = '1'
 
 def rdt_3_0_receive():
