@@ -48,7 +48,7 @@ class Packet:
 
     @staticmethod
     def corrupt(msg, computed_checksum_S):
-        # extract the fields
         checksum_S = Packet.calculate_checkSum(msg)
-        # and check if the same
-        return checksum_S != computed_checksum_S
+        inverted_checksum = ~computed_checksum_S & 255
+
+        return Packet.binarySum(checksum_S, inverted_checksum) != 255
