@@ -6,7 +6,6 @@ import Packet
 def host_a_sender(queue_a, queue_b):
     msg = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
     print("HOST A - Instanciando camada de transporte para enviar dados... RDT 2.1")
-    print("HOST A - Enviando Mensagem")
     RDT_2_1.rdt_2_1_send(msg,queue_a, queue_b)
     #print("HOST A - Instanciando camada de transporte para enviar dados... RDT 2.2")
     #print("HOST A - Enviando Mensagem")

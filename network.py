@@ -25,8 +25,9 @@ def udt_send(packet, queue, range, ini=1):
     else:
         print("NETWORK - Pacote normal")
 
-        # fim do codigo que corrompe ou não
+    # fim do codigo que corrompe ou não
     queue.put(packet)
+
 
 
 def receivd(queue):
