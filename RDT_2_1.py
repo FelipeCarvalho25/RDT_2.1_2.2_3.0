@@ -1,5 +1,6 @@
 # Esta é a camada de transporte
 import network
+import timer
 import Packet
 import time
 import host_a
@@ -182,7 +183,7 @@ def rdt_2_2_receive(queue, event):
 def rdt_3_0_send(msg_S, queue, event):
     state = '0'
     rcv_packt = None
-    timer = None
+    rdt_timer = 0
 
     while True:
 
@@ -192,18 +193,18 @@ def rdt_3_0_send(msg_S, queue, event):
             # if RDT_2_1.send_ready(msg_S):
             network.udt_send(snd_packt, queue, 10)
             event.wait()
-            start_timer(timer)
+            timer.start_timer(rdt_timer)
             state = '1'
 
         elif state == '1':
             snd_packt = Packet.Packet(0, msg_S, '0')
-            rcv_packt = reveid(queue )
+            rcv_packt = reveid(queue)
             event.set()
 
-            if timeout(timer):
+            if timer.timeout(rdt_timer):
                 network.udt_send(snd_packt, queue, 10)
                 event.wait()
-                start_timer(timer)
+                timer.start_timer(rdt_timer)
 
             elif not (rcv_packt is None) and not rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) and rcv_packt.isNak():
                 state = '2'
@@ -216,7 +217,7 @@ def rdt_3_0_send(msg_S, queue, event):
             # elif RDT_2_1.send_ready(msg_S):
             network.udt_send(snd_packt, queue, 10)
             event.wait()
-            start_timer(timer)
+            timer.start_timer(rdt_timer)
             state = '3'
 
         elif state == '3':
@@ -224,15 +225,15 @@ def rdt_3_0_send(msg_S, queue, event):
             rcv_packt = reveid(queue)
             event.set()
 
-            if timeout(timer):
+            if timer.timeout(rdt_timer):
                 network.udt_send(snd_packt, queue, 10)
                 event.wait()
-                start_timer(timer)
+                timer.start_timer(rdt_timer)
 
             elif not (rcv_packt is None) and not rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) and rcv_packt.isAck():
                 state = '1'
 
-def rdt_3_0_receive():
+def rdt_3_0_receive(queue, event):
     state = '0'
     NAK = 'NAK'
     ACK = 'ACK'

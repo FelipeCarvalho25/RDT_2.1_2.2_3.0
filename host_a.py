@@ -8,7 +8,7 @@ def host_a_sender(queue, event):
     print("HOST A - Instanciando camada de transporte para enviar dados...")
     print("HOST A - Enviando Mensagem")
     RDT_2_1.rdt_2_1_send(msg,queue, event)
-
+    #RDT_2_1.rdt_3_0_send(msg,queue, event)
 
 
 
