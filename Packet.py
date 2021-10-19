@@ -1,7 +1,6 @@
 # Classe do pacote
 import hashlib
 
-
 class Packet:
 
     def __init__(self, seq_num, msg_S, ack_num):
@@ -10,9 +9,22 @@ class Packet:
         self.ack_num = ack_num
         self.check_sum = Packet.calculate_checkSum(msg_S)
 
+    def binarySum(a, b):
+        while(b != 0):
+            carry = a & b
+            a = a ^ b
+            b = carry << 1
+        return a
+
     @classmethod
     def calculate_checkSum(cls, data):
-        checkSum = 1
+        checkSum = 0
+        for char in data:
+            checkSum = Packet.binarySum(checkSum, ord(char))
+
+            while(checkSum > 255):
+                checkSum = checkSum % 256
+                checkSum = Packet.binarySum(checkSum, 1)
         return checkSum
 
     def setMsg(self, msg):
