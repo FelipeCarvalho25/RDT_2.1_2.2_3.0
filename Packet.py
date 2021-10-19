@@ -21,8 +21,12 @@ class Packet:
     def isNak(self):
         return self.msg_S == 'NAK'
 
-    def isAck(self):
-        return self.msg_S == 'ACK'
+    def isAck(self, seq = -1):
+        if seq == -1:
+            return self.msg_S == 'ACK'
+        else:
+            return self.msg_S == 'ACK' and self.seq_num == seq
+
 
     def has_seq(self):
         return self.seq_num
