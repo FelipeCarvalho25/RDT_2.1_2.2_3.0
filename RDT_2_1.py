@@ -188,6 +188,7 @@ def rdt_3_0_send(msg_S, queue, event):
 
         if state == '0':
             snd_packt = Packet.Packet(0, msg_S, '0')
+            
             # if RDT_2_1.send_ready(msg_S):
             network.udt_send(snd_packt, queue, 10)
             event.wait()
@@ -198,11 +199,14 @@ def rdt_3_0_send(msg_S, queue, event):
             snd_packt = Packet.Packet(0, msg_S, '0')
             rcv_packt = reveid(queue )
             event.set()
+
             if not (rcv_packt is None) and (rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) or rcv_packt.isNak()):
+
             elif timeout(timer):
                 network.udt_send(snd_packt, queue, 10)
                 event.wait()
                 start_timer(timer)
+
             elif not (rcv_packt is None) and not rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) and rcv_packt.isAck():
                 state = '2'
 
@@ -210,7 +214,9 @@ def rdt_3_0_send(msg_S, queue, event):
             snd_packt = Packet.Packet(1, msg_S, '1')
             rcv_packt = reveid(queue)
             event.set()
+
             if not (rcv_packt is None):
+
             # elif RDT_2_1.send_ready(msg_S):
             network.udt_send(snd_packt, queue, 10)
             event.wait()
@@ -219,15 +225,55 @@ def rdt_3_0_send(msg_S, queue, event):
 
         elif state == '3':
             snd_packt = Packet.Packet(0, msg_S, '0')    
-            rcv_packt = reveid(queue )
+            rcv_packt = reveid(queue)
             event.set()
+
             if not (rcv_packt is None) and (rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) or rcv_packt.isAck()):
+
             elif timeout(timer):
                 network.udt_send(snd_packt, queue, 10)
                 event.wait()
                 start_timer(timer)
+
             elif not (rcv_packt is None) and not rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) and rcv_packt.isNak():
                 state = '1'
 
 def rdt_3_0_receive():
-    pass
+    state = '0'
+    NAK = 'NAK'
+    ACK = 'ACK'
+    while True:
+
+        if state == '0':
+            rcv_packt = reveid(queue)
+            event.set()
+
+            if not (rcv_packt is None) and (rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) or rcv_packt.has_seq() == 1):
+                snd_packt = Packet.Packet(rcv_packt.seq_num, ACK, '1')
+                network.udt_send(snd_packt, queue, 10)
+                event.wait()
+
+            elif not (rcv_packt is None) and not rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) and rcv_packt.has_seq() == 0:
+                data = rcv_packt.extract()
+                deliver_data(data)
+                snd_packt = Packet.Packet(rcv_packt.seq_num, ACK, '0')
+                network.udt_send(snd_packt, queue, 10)
+                event.wait()
+                state = '1'
+
+        elif state == '1':
+            rcv_packt = reveid(queue)
+            event.set()
+
+            if not (rcv_packt is None) and (rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) or rcv_packt.has_seq() == 0):
+                snd_packt = Packet.Packet(rcv_packt.seq_num, ACK, '0')
+                network.udt_send(snd_packt, queue, 10)
+                event.wait()
+
+            elif not (rcv_packt is None) and not rcv_packt.corrupt(rcv_packt.msg_S, rcv_packt.check_sum) and rcv_packt.has_seq() == 1:
+                data = rcv_packt.extract()
+                deliver_data(data)
+                snd_packt = Packet.Packet(rcv_packt.seq_num, ACK, '1')
+                network.udt_send(snd_packt, queue, 10)
+                event.wait()
+                state = '1'
