@@ -1,6 +1,7 @@
 # Classe do pacote
 import hashlib
 
+
 class Packet:
 
     def __init__(self, seq_num, msg_S, ack_num):
@@ -8,9 +9,10 @@ class Packet:
         self.msg_S = msg_S
         self.ack_num = ack_num
         self.check_sum = Packet.calculate_checkSum(msg_S)
+        #print(self.check_sum)
 
     def binarySum(a, b):
-        while(b != 0):
+        while (b != 0):
             carry = a & b
             a = a ^ b
             b = carry << 1
@@ -22,7 +24,7 @@ class Packet:
         for char in data:
             checkSum = Packet.binarySum(checkSum, ord(char))
 
-            while(checkSum > 255):
+            while (checkSum > 255):
                 checkSum = checkSum % 256
                 checkSum = Packet.binarySum(checkSum, 1)
         return checkSum
@@ -33,12 +35,11 @@ class Packet:
     def isNak(self):
         return self.msg_S == 'NAK'
 
-    def isAck(self, seq = -1):
+    def isAck(self, seq=-1):
         if seq == -1:
             return self.msg_S == 'ACK'
         else:
-            return self.msg_S == 'ACK' and self.seq_num == seq
-
+            return self.msg_S == 'ACK' and self.ack_num == str(seq)
 
     def has_seq(self):
         return self.seq_num

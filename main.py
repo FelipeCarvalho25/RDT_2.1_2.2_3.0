@@ -13,5 +13,6 @@ if __name__ == '__main__':
 
     thread_host_a.start()
     thread_host_b.start()
+    thread_host_a.join()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
