@@ -18,7 +18,7 @@ def rdt_2_1_send(msg_S, queue_a, queue_b):
     completed_ciclo = False
     cont = 0
     posMsg = 0
-    n = len(msg_S) / 10
+    n = int(len(msg_S) / 10)
     splited = []
     if n > 1:
         len_l = len(msg_S)
@@ -138,7 +138,7 @@ def rdt_2_2_send(msg_S, queue_a, queue_b):
     completed_ciclo = False
     cont = 0
     posMsg = 0
-    n = len(msg_S) / 10
+    n = int(len(msg_S) / 10)
     splited = []
     if n > 1:
         len_l = len(msg_S)
@@ -241,7 +241,7 @@ def rdt_3_0_send(msg_S, queue_a, queue_b):
     completed_ciclo = False
     cont = 0
     posMsg = 0
-    n = len(msg_S) / 10
+    n = int(len(msg_S) / 10)
     splited = []
     if n > 1:
         len_l = len(msg_S)
