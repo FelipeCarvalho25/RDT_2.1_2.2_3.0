@@ -1,5 +1,5 @@
 # Classe do pacote
-import hashlib
+
 
 
 class Packet:

@@ -1,6 +1,5 @@
 # Esta é a camada de rede
-import Packet
-from queue import Queue
+
 from time import sleep
 import random  # necessário para utilizar o módulo random
 

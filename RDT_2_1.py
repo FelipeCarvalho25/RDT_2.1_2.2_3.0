@@ -2,10 +2,7 @@
 import network
 import timer
 import Packet
-import time
-import host_a
 import host_b
-from queue import Queue
 
 
 def reveid(queue):

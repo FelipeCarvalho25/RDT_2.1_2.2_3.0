@@ -1,6 +1,6 @@
 # Esta é a camada de aplicação Sender
 import RDT_2_1
-import Packet
+
 
 
 def host_a_sender(queue_a, queue_b):
