@@ -11,7 +11,7 @@ def host_a_sender(queue_a, queue_b):
     #RDT_2_1.rdt_2_2_send(msg, queue_a, queue_b)
     #print("HOST A - Instanciando camada de transporte para enviar dados... RDT 3.0")
     #RDT_2_1.rdt_3_0_send(msg, queue_a, queue_b)
-    #RDT_2_1.rdt_3_0_send(msg,queue, event)
+
 
 
 

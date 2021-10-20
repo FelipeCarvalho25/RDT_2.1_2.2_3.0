@@ -10,7 +10,7 @@ def receiver_host_b(queue_a, queue_b):
     #RDT_2_1.rdt_2_2_receive(queue_a, queue_b)
     #print("HOST B - Instanciando API da camada de transporte para receber dados - RDT 3.0")
     #RDT_2_1.rdt_3_0_receive(queue_a, queue_b)
-    #print(RDT_2_1.rdt_3_0_receive(queue_a, queue_b))
+
 
 def to_app_layer(msg):
     print("HOST B - Mensagem recebida:" + str(msg))
